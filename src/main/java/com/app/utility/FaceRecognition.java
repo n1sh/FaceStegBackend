@@ -63,6 +63,8 @@ public class FaceRecognition {
         faceRecognizer.predict(testImage, label, confidence);
         int predictedLabel = label.get(0);
         System.out.println(confidence.get());
+        if(confidence.get()>50)
+        	return -1;
         System.out.println("Predicted label: " + predictedLabel);
         return predictedLabel;
         

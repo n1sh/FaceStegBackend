@@ -16,6 +16,7 @@ import com.app.utility.FaceRecognition;
 import com.app.utility.Message;
 import com.facesteg.dao.ImageHandler;
 import com.facesteg.dao.ImageHandlerImpl;
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -48,7 +49,7 @@ public class MyResource {
 	@Path("login")
 	public String uploadImage(String img) throws IOException{
 		String sourceData = img;
-		
+		System.out.println(img);
 		// tokenize the data
 		String[] parts = sourceData.split(",");
 		String imageString = parts[1];
@@ -73,11 +74,16 @@ public class MyResource {
 		try {
 			Message obj = new Message(commonpath + filename);
 			String respData = obj.getMessage();
+			System.out.println(respData);
 			int division = respData.indexOf('|');
 			String username = respData.substring(0, division);
 			String password = respData.substring(division+1,respData.length());
 			FaceRecognition facerec = new FaceRecognition();
+			System.out.println(commonpath+filename);
 			int id = facerec.recognize("E:\\ImageData\\SignUpData\\", commonpath+filename);
+			if(id == -1) {
+				return "faceError";
+			}
 			//System.out.println("E:\\ImageData\\SignUpData\\" + id + "-" + username + "1.png");
 			Message obj2 = new Message("E:\\ImageData\\SignUpData\\" + id + "-" + username + "1.png");
 			//System.out.println("E:\\ImageData\\SignUpData\\" + id + "-" + username + "1.png");
@@ -122,12 +128,12 @@ public class MyResource {
 		
 		try {
 			Message obj = new Message(commonpath + filename);
+			System.out.println(obj.getMessage());
 			String[] userdata = obj.getMessage().split("@@");
 			username = userdata[0];
 			password = userdata[1];
-			age = userdata[2];
-			dob = userdata[3];
-			name = userdata[4];
+			dob = userdata[2];
+			name = userdata[3];
 			ImageHandler imageHandler = new ImageHandlerImpl();
 			int id = imageHandler.saveUser(username, name, dob);
 			commonpath = "E:\\ImageData\\SignUpData\\";
